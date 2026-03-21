@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ p.name }} - Detalhes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: radial-gradient(circle, #2c2c2c 0%, #000 100%); color: white; min-height: 100vh; }
+        .detail-img { width: 100%; max-width: 400px; border: 5px solid #ffc107; border-radius: 15px; }
+        .spell-box { border-left: 4px solid #ffc107; background: rgba(255,193,7,0.1); padding: 15px; }
+        .btn-favorito { background-color: #ffc107; color: #000; font-weight: bold; border: none; transition: 0.3s; }
+        .btn-favorito:hover { background-color: #e0a800; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+<div class="container py-5 text-center text-md-start">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-light mb-4">← Voltar</a>
+    
+    <div class="row align-items-center">
+        <div class="col-md-5 text-center">
+            <img src="{{ p.image|default:'https://via.placeholder.com/400x600' }}" class="detail-img shadow-lg mb-4">
+        </div>
+        
+        <div class="col-md-7">
+            <h1 class="display-3 text-warning fw-bold">{{ p.name }}</h1>
+            <hr class="bg-warning">
+            
+            <ul class="list-unstyled fs-5">
+                <li><strong>Casa:</strong> {{ p.house|default:"Sem casa" }}</li>
+                <li><strong>Ator:</strong> {{ p.actor }}</li>
+                <li><strong>Espécie:</strong> {{ p.species }}</li>
+                <li><strong>Varinha:</strong> {{ p.wand.wood|default:"Desconhecida" }} ({{ p.wand.core|default:"-" }})</li>
+            </ul>
+
+            <form action="{% url 'adicionar_favorito' %}" method="POST" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="name" value="{{ p.name }}">
+                <input type="hidden" name="image" value="{{ p.image }}">
+                <input type="hidden" name="house" value="{{ p.house }}">
+                <input type="hidden" name="actor" value="{{ p.actor }}">
+                <button type="submit" class="btn btn-lg btn-favorito px-4">
+                    Adicionar aos Favoritos ❤️
+                </button>
+                
+            </form>
+            
+            <div class="spell-box mt-5">
+                <h4 class="text-warning">✨ Feitiço do Dia:</h4>
+                <p class="mb-0"><strong>{{ feitico.name }}</strong>: {{ feitico.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Hogwarts - Lista</title>
+    <style>
+  
+:root {
+    --cor-ouro: #d4af37;
+    --cor-fundo: #0a0a0a;
+    --cor-card: #161b22;
+    --cor-texto: #ffffff;
+    --cor-borda: #30363d;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+.titulo-pagina {
+    text-align: center;
+    color: var(--cor-ouro);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+
+.grade-personagens {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+
+.card-personagem {
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.card-personagem:hover {
+    transform: translateY(-5px);
+    border-color: var(--cor-ouro);
+}
+
+
+.area-foto {
+    width: 100%;
+    height: 320px;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.area-foto img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; 
+}
+
+
+.botao-detalhes {
+    display: inline-block;
+    margin: 15px 0;
+    padding: 10px 20px;
+    border: 1px solid var(--cor-ouro);
+    color: var(--cor-ouro);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.botao-detalhes:hover {
+    background: var(--cor-ouro);
+    color: #000;
+}
+
+.botao-favoritar {
+    background: var(--cor-ouro);
+    color: #000;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+}
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    <div class="container">
+        
+        <h1 class="titulo-pagina">Galeria de Hogwarts</h1>
+        <form method="GET" action="{% url 'index' %}" style="text-align: center; margin-bottom: 40px;">
+        <select name="casa" onchange="this.form.submit()" style="padding: 12px 20px; width: 100%; max-width: 300px; border-radius: 6px; border: 1px solid var(--cor-borda); background: var(--cor-card); color: white; cursor: pointer;">
+            <option value="">Todas as Casas</option>
+            <option value="Gryffindor" {% if casa_selecionada == 'Gryffindor' %}selected{% endif %}>Grifinória</option>
+            <option value="Slytherin" {% if casa_selecionada == 'Slytherin' %}selected{% endif %}>Sonserina</option>
+            <option value="Hufflepuff" {% if casa_selecionada == 'Hufflepuff' %}selected{% endif %}>Lufa-Lufa</option>
+            <option value="Ravenclaw" {% if casa_selecionada == 'Ravenclaw' %}selected{% endif %}>Corvinal</option>
+        </select>
+        <noscript><button type="submit">Filtrar</button></noscript>
+    </form>
+
+        <div class="grade-personagens">
+            {% for p in personagens %}
+            <div class="card-personagem">
+                <div class="area-foto">
+                    <img src="{{ p.image|default:'https://via.placeholder.com/300x400' }}" alt="{{ p.name }}">
+                </div>
+                <h3>{{ p.name }}</h3>
+                <p>{{ p.house|default:"Sem Casa" }}</p>
+                <a href="{% url 'detalhe_bruxo' p.id %}" class="botao-detalhes">Ver Ficha</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
