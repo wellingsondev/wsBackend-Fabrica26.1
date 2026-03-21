@@ -1,141 +1,57 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>{{ p.name }} - Detalhes</title>
-    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Cores do Projeto */
-:root {
-    --cor-ouro: #d4af37;
-    --cor-fundo: #0a0a0a;
-    --cor-card: #161b22;
-    --cor-texto: #ffffff;
-    --cor-borda: #30363d;
-}
-
-body {
-    background-color: var(--cor-fundo);
-    color: var(--cor-texto);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-/* Container Centralizador */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Título Principal */
-.titulo-pagina {
-    text-align: center;
-    color: var(--cor-ouro);
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-}
-
-/* Grid de Layout */
-.grade-personagens {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-}
-
-/* Card Individual */
-.card-personagem {
-    background: var(--cor-card);
-    border: 1px solid var(--cor-borda);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s;
-    text-align: center;
-}
-
-.card-personagem:hover {
-    transform: translateY(-5px);
-    border-color: var(--cor-ouro);
-}
-
-/* FOTO SEM CORTES */
-.area-foto {
-    width: 100%;
-    height: 320px;
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.area-foto img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Mostra a foto inteira sem cortar */
-}
-
-/* Botões Estilizados */
-.botao-detalhes {
-    display: inline-block;
-    margin: 15px 0;
-    padding: 10px 20px;
-    border: 1px solid var(--cor-ouro);
-    color: var(--cor-ouro);
-    text-decoration: none;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.botao-detalhes:hover {
-    background: var(--cor-ouro);
-    color: #000;
-}
-
-.botao-favoritar {
-    background: var(--cor-ouro);
-    color: #000;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 6px;
-}
+        body { background: radial-gradient(circle, #2c2c2c 0%, #000 100%); color: white; min-height: 100vh; }
+        .detail-img { width: 100%; max-width: 400px; border: 5px solid #ffc107; border-radius: 15px; }
+        .spell-box { border-left: 4px solid #ffc107; background: rgba(255,193,7,0.1); padding: 15px; }
+        .btn-favorito { background-color: #ffc107; color: #000; font-weight: bold; border: none; transition: 0.3s; }
+        .btn-favorito:hover { background-color: #e0a800; transform: scale(1.05); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="ficha-tecnica">
-            <div class="area-foto" style="flex: 1; border-radius: 12px; border: 1px solid var(--cor-ouro);">
-                <img src="{{ p.image|default:'https://via.placeholder.com/300x400' }}" alt="{{ p.name }}">
-            </div>
 
-            <div class="texto-info">
-                <h1 style="color: var(--cor-ouro);">{{ p.name }}</h1>
-                <p><strong>Ator:</strong> {{ p.actor }}</p>
-                <p><strong>Descrição:</strong> {{ p.name }} é um bruxo de ancestralidade {{ p.ancestry|default:"misteriosa" }} e seu patrono é {{ p.patronus|default:"desconhecido" }}.</p>
-                
-                <div class="caixa-feitico">
-                    <h4 style="margin: 0; color: var(--cor-ouro);">🪄 Feitiço mais usado</h4>
-                    <p style="font-size: 1.2rem; margin: 10px 0 0;"><strong>{{ feitico.name }}</strong></p>
-                    <p style="font-style: italic; color: #aaa;">{{ feitico.description }}</p>
-                </div>
+<div class="container py-5 text-center text-md-start">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-light mb-4">← Voltar</a>
+    
+    <div class="row align-items-center">
+        <div class="col-md-5 text-center">
+            <img src="{{ p.image|default:'https://via.placeholder.com/400x600' }}" class="detail-img shadow-lg mb-4">
+        </div>
+        
+        <div class="col-md-7">
+            <h1 class="display-3 text-warning fw-bold">{{ p.name }}</h1>
+            <hr class="bg-warning">
+            
+            <ul class="list-unstyled fs-5">
+                <li><strong>Casa:</strong> {{ p.house|default:"Sem casa" }}</li>
+                <li><strong>Ator:</strong> {{ p.actor }}</li>
+                <li><strong>Espécie:</strong> {{ p.species }}</li>
+                <li><strong>Varinha:</strong> {{ p.wand.wood|default:"Desconhecida" }} ({{ p.wand.core|default:"-" }})</li>
+            </ul>
 
-                <form action="{% url 'adicionar_favorito' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="name" value="{{ p.name }}">
-                    <input type="hidden" name="image" value="{{ p.image }}">
-                    <input type="hidden" name="house" value="{{ p.house }}">
-                    <input type="hidden" name="actor" value="{{ p.actor }}">
-                    <button type="submit" class="botao-favoritar">⭐ Adicionar aos Favoritos</button>
-                </form>
+            <form action="{% url 'adicionar_favorito' %}" method="POST" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="name" value="{{ p.name }}">
+                <input type="hidden" name="image" value="{{ p.image }}">
+                <input type="hidden" name="house" value="{{ p.house }}">
+                <input type="hidden" name="actor" value="{{ p.actor }}">
+                <button type="submit" class="btn btn-lg btn-favorito px-4">
+                    Adicionar aos Favoritos ❤️
+                </button>
                 
-                <br>
-                <a href="{% url 'index' %}" style="color: #888;">← Voltar para a lista</a>
+            </form>
+            
+            <div class="spell-box mt-5">
+                <h4 class="text-warning">✨ Feitiço do Dia:</h4>
+                <p class="mb-0"><strong>{{ feitico.name }}</strong>: {{ feitico.description }}</p>
             </div>
         </div>
     </div>
+</div>
+
 </body>
 </html>
