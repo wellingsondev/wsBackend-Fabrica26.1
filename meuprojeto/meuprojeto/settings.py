@@ -24,6 +24,8 @@ SECRET_KEY = 'django-insecure-o2cj@w$fml&adw&c_gzrka0y6w&%_m!p(akv!z*&t=6$+y)p_2
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+LOGIN_REDIRECT_URL = 'meus_alugueis'  # Nome da rota definida no seu urls.py
+LOGOUT_REDIRECT_URL = 'login'
 
 ALLOWED_HOSTS = []
 
@@ -31,7 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'filmes',
+    'meuapp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

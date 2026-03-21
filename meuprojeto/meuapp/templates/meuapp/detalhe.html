@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ p.name }} - Detalhes</title>
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <style>
+        /* Cores do Projeto */
+:root {
+    --cor-ouro: #d4af37;
+    --cor-fundo: #0a0a0a;
+    --cor-card: #161b22;
+    --cor-texto: #ffffff;
+    --cor-borda: #30363d;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container Centralizador */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Título Principal */
+.titulo-pagina {
+    text-align: center;
+    color: var(--cor-ouro);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+/* Grid de Layout */
+.grade-personagens {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Card Individual */
+.card-personagem {
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.card-personagem:hover {
+    transform: translateY(-5px);
+    border-color: var(--cor-ouro);
+}
+
+/* FOTO SEM CORTES */
+.area-foto {
+    width: 100%;
+    height: 320px;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.area-foto img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Mostra a foto inteira sem cortar */
+}
+
+/* Botões Estilizados */
+.botao-detalhes {
+    display: inline-block;
+    margin: 15px 0;
+    padding: 10px 20px;
+    border: 1px solid var(--cor-ouro);
+    color: var(--cor-ouro);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.botao-detalhes:hover {
+    background: var(--cor-ouro);
+    color: #000;
+}
+
+.botao-favoritar {
+    background: var(--cor-ouro);
+    color: #000;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ficha-tecnica">
+            <div class="area-foto" style="flex: 1; border-radius: 12px; border: 1px solid var(--cor-ouro);">
+                <img src="{{ p.image|default:'https://via.placeholder.com/300x400' }}" alt="{{ p.name }}">
+            </div>
+
+            <div class="texto-info">
+                <h1 style="color: var(--cor-ouro);">{{ p.name }}</h1>
+                <p><strong>Ator:</strong> {{ p.actor }}</p>
+                <p><strong>Descrição:</strong> {{ p.name }} é um bruxo de ancestralidade {{ p.ancestry|default:"misteriosa" }} e seu patrono é {{ p.patronus|default:"desconhecido" }}.</p>
+                
+                <div class="caixa-feitico">
+                    <h4 style="margin: 0; color: var(--cor-ouro);">🪄 Feitiço mais usado</h4>
+                    <p style="font-size: 1.2rem; margin: 10px 0 0;"><strong>{{ feitico.name }}</strong></p>
+                    <p style="font-style: italic; color: #aaa;">{{ feitico.description }}</p>
+                </div>
+
+                <form action="{% url 'adicionar_favorito' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="name" value="{{ p.name }}">
+                    <input type="hidden" name="image" value="{{ p.image }}">
+                    <input type="hidden" name="house" value="{{ p.house }}">
+                    <input type="hidden" name="actor" value="{{ p.actor }}">
+                    <button type="submit" class="botao-favoritar">⭐ Adicionar aos Favoritos</button>
+                </form>
+                
+                <br>
+                <a href="{% url 'index' %}" style="color: #888;">← Voltar para a lista</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
